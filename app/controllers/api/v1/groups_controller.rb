@@ -8,13 +8,15 @@ module Api
 
       # GET /groups
       def index
-        @groups = Group.all
-
-        render json: @groups
+        @groups = Group.page(page_params[:page]).per(page_params[:per_page])
+        render json: @groups.to_json(only: %I[_id name], include: { organizers: { only: :name } })
       end
 
       # GET /groups/1
       def show
+        @group = @group.to_json(only: %I[_id name], include: {
+            meets: { only: %I[_id], include: { user: { only: %I[first_name last_name] }, role: { only: :name } } }
+        })
         render json: @group
       end
 
@@ -53,6 +55,12 @@ module Api
       # Only allow a trusted parameter "white list" through.
       def group_params
         params.require(:group).permit(:name)
+      end
+
+      def page_params
+        params[:page] = params[:page] || 1
+        params[:per_page] = params[:per_page] || 5
+        params
       end
     end
   end

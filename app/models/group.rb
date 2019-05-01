@@ -10,4 +10,16 @@ class Group
 
   # association
   has_many :meets
+  embeds_many :organizers
+end
+
+# Embedded Organizer Model
+class Organizer
+  include Mongoid::Document
+  field :name, type: String
+  # validation
+  validates :name, uniqueness: true
+
+  # association
+  embedded_in :group
 end

@@ -120,7 +120,7 @@ development:
 
     # Raise an error when performing a #find and the document is not found.
     # (default: true)
-    # raise_not_found_error: true
+    raise_not_found_error: false
 
     # Raise an error when defining a scope with the same name as an
     # existing method. (default: false)
@@ -162,6 +162,7 @@ test:
         read:
           mode: :primary
         max_pool_size: 1
+        raise_not_found_error: false
 production:
   clients:
     default:
@@ -177,3 +178,4 @@ production:
         # We recommend 15 because it allows for plenty of time
         # in most operating environments.
         connect_timeout: 15
+        raise_not_found_error: false
