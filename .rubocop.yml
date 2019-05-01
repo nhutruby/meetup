@@ -6,3 +6,4 @@ AllCops:
     - 'client/**/*'
     - 'bin/**/*'
     - 'config/**/*'
+    - 'spec/**/*'
