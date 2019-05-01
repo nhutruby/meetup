@@ -1,0 +1,8 @@
+require: rubocop-performance
+Metrics/LineLength:
+  Max: 100
+AllCops:
+  Exclude:
+    - 'client/**/*'
+    - 'bin/**/*'
+    - 'config/**/*'
