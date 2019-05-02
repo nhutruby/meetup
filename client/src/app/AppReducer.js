@@ -9,17 +9,10 @@ const UploadReducer = (state, action) => {
         uploading: true
       };
     case "UPLOAD_FAIL":
-      return {
-        ...state,
-        uploading: false,
-        error: action.message
-      };
+      return {data: state, uploading: false, error: action.message};
     case "UPLOAD_SUCCESS":
-      state = action.data;
-      return {
-        ...state,
-        uploading: false
-      };
+      state = action.data.groups;
+      return {data: state, total_objects: action.data.meta.total_objects};
     case "LIST":
       return state;
     case "LIST_FAIL":

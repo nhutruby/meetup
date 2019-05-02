@@ -199,6 +199,7 @@ class CEnhancedTable extends React.Component {
 
   handleChangeRowsPerPage = event => {
     this.setState({rowsPerPage: event.target.value});
+    this.setState({page: 0});
     this.props.list({page: 1, per_page: event.target.value});
   };
 
@@ -269,15 +270,18 @@ const mapDispatchToProps = dispatch => {
 };
 const mapStateToProps = state => {
   let groups = [];
-  Array.prototype.forEach.call(state.AppReducer.data, group => {
-    let organizers = [];
-    if (group.organizers) {
-      Array.prototype.forEach.call(group.organizers, organizer => {
-        organizers.push(organizer.name);
-      });
-    }
-    groups.push({id: group.id, name: group.name, organizer: organizers.join(", ")});
-  });
+  if (state.AppReducer.data) {
+    Array.prototype.forEach.call(state.AppReducer.data, group => {
+      let organizers = [];
+      if (group.organizers) {
+        Array.prototype.forEach.call(group.organizers, organizer => {
+          organizers.push(organizer.name);
+        });
+      }
+      groups.push({id: group.id, name: group.name, organizer: organizers.join(", ")});
+    });
+  }
+
   console.log(state.AppReducer.data);
   const total_objects = state.AppReducer.total_objects || 0;
   console.log(total_objects);
