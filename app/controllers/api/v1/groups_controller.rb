@@ -18,7 +18,7 @@ module Api
         @group = @group.to_json(only: %I[_id name], include: {
             meets: { only: %I[_id], include: { user: { only: %I[first_name last_name] }, role: { only: :name } } }
         })
-        # rubocop:enable all   
+        # rubocop:enable all
         render json: @group
       end
 
@@ -50,6 +50,8 @@ module Api
       def import
         puts params[:file]
         Group.import(params[:file])
+        @groups = Group.page(page_params[:page]).per(page_params[:per_page])
+        render json: @groups.to_json(only: %I[_id name], include: { organizers: { only: :name } })
       end
 
       private

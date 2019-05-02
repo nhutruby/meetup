@@ -14,6 +14,8 @@ const UploadReducer = (state, action) => {
         uploading: false
       };
     case "UPLOAD_SUCCESS":
+      console.log(action);
+      state = action.data;
       return {
         ...state,
         uploading: false
