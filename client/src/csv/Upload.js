@@ -21,10 +21,8 @@ const styles = theme => ({
 });
 const FUpload = props => {
   const {classes} = props;
-  const [uploading, setUploading] = useState(false);
   const handleUpload = e => {
     e.preventDefault();
-    setUploading(true);
     props.upload(e.target.files[0]);
   };
   return (<div className={classes.root}>
@@ -46,8 +44,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 const mapStateToProps = state => {
-  console.log(state.AppReducer);
-  return {groups: state.AppReducer, uploading: state.AppReducer.uploading};
+  return {uploading: state.AppReducer.uploading};
 };
 const Upload = connect(mapStateToProps, mapDispatchToProps)(FUpload);
 

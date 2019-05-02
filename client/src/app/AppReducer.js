@@ -1,6 +1,6 @@
 const UploadReducer = (state, action) => {
   if (state === undefined) 
-    return {uploading: false};
+    return {data: {}, uploading: false};
   
   switch (action.type) {
     case "UPLOAD":
@@ -11,15 +11,23 @@ const UploadReducer = (state, action) => {
     case "UPLOAD_FAIL":
       return {
         ...state,
-        uploading: false
+        uploading: false,
+        error: action.message
       };
     case "UPLOAD_SUCCESS":
-      console.log(action);
       state = action.data;
       return {
         ...state,
         uploading: false
       };
+    case "LIST":
+      return state;
+    case "LIST_FAIL":
+      return {data: state, error: action.message};
+    case "LIST_SUCCESS":
+      state = action.data.groups;
+      console.log(action.data.groups);
+      return {data: state, total_objects: action.data.meta.total_objects};
     default:
       return state;
   }

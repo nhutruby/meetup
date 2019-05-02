@@ -17,13 +17,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import {lighten} from "@material-ui/core/styles/colorManipulator";
-
-let counter = 0;
-
-function createData(name, organizer, action) {
-  counter += 1;
-  return {id: counter, name, organizer, action};
-}
+import {list} from "../app/AppAction";
+import {connect} from "react-redux";
 
 const rows = [
   {
@@ -51,7 +46,7 @@ class EnhancedTableHead extends React.Component {
     return (<TableHead>
       <TableRow>
         <TableCell padding="checkbox">
-          <Checkbox indeterminate={numSelected > 0 && numSelected < rowCount} checked={numSelected === rowCount} onChange={onSelectAllClick}/>
+          <Checkbox indeterminate={numSelected > 0 && numSelected < rowCount} onChange={onSelectAllClick}/>
         </TableCell>
         {
           rows.map(row => (<TableCell key={row.id} align={row.numeric
@@ -107,8 +102,7 @@ let EnhancedTableToolbar = props => {
       {
         numSelected > 0
           ? (<Typography color="inherit" variant="subtitle1">
-            {numSelected}
-            selected
+            {[numSelected, "selected"].join(" ")}
           </Typography>)
           : (<Typography variant="h6" id="tableTitle">
             Group
@@ -157,31 +151,21 @@ const styles = theme => ({
   }
 });
 
-class EnhancedTable extends React.Component {
+class CEnhancedTable extends React.Component {
   state = {
     selected: [],
-    data: [
-      createData("Cupcake Cupcake Cupcake", "Cupcake Cupcake Cupcake", "b"),
-      createData("Cupcake", "a", "b"),
-      createData("Cupcake", "a", "b"),
-      createData("Cupcake", "a", "b"),
-      createData("Cupcake", "a", "b"),
-      createData("Cupcake", "a", "b"),
-      createData("Cupcake", "a", "b"),
-      createData("Cupcake", "a", "b"),
-      createData("Cupcake", "a", "b"),
-      createData("Cupcake", "a", "b"),
-      createData("Cupcake", "a", "b"),
-      createData("Cupcake", "a", "b")
-    ],
+    data: [],
     page: 0,
     rowsPerPage: 5
   };
-
+  constructor(props) {
+    super(props);
+    this.props.list({page: 1, per_page: 5});
+  }
   handleSelectAllClick = event => {
     if (event.target.checked) {
       this.setState(state => ({
-        selected: state.data.map(n => n.id)
+        selected: this.props.data.map(n => n.id)
       }));
       return;
     }
@@ -215,20 +199,22 @@ class EnhancedTable extends React.Component {
 
   handleChangeRowsPerPage = event => {
     this.setState({rowsPerPage: event.target.value});
+    this.props.list({page: 1, per_page: event.target.value});
   };
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
     const {classes} = this.props;
-    const {data, selected, rowsPerPage, page} = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+    const {selected, rowsPerPage, page} = this.state;
+    const {data} = this.props;
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, this.props.total_objects - page * rowsPerPage);
 
     return (<Paper className={classes.root}>
       <EnhancedTableToolbar numSelected={selected.length}/>
       <div className={classes.tableWrapper}>
         <Table className={classes.table} aria-labelledby="tableTitle">
-          <EnhancedTableHead numSelected={selected.length} onSelectAllClick={this.handleSelectAllClick} rowCount={data.length}/>
+          <EnhancedTableHead numSelected={selected.length} onSelectAllClick={this.handleSelectAllClick} rowCount={this.props.total_objects}/>
           <TableBody>
             {
               data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(n => {
@@ -244,8 +230,12 @@ class EnhancedTable extends React.Component {
                     {n.organizer}
                   </TableCell>
                   <TableCell align="center">
-                    <DeleteIcon className={classes.icon}/>
-                    <EditIcon className={classes.icon}/>
+                    <Tooltip title="Edit">
+                      <EditIcon className={classes.icon}/>
+                    </Tooltip>
+                    <Tooltip title="Delete">
+                      <DeleteIcon className={classes.icon}/>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>);
               })
@@ -260,7 +250,7 @@ class EnhancedTable extends React.Component {
           </TableBody>
         </Table>
       </div>
-      <TablePagination rowsPerPageOptions={[5, 10, 25]} component="div" count={data.length} rowsPerPage={rowsPerPage} page={page} backIconButtonProps={{
+      <TablePagination rowsPerPageOptions={[5, 10, 25]} component="div" count={this.props.total_objects} rowsPerPage={rowsPerPage} page={page} backIconButtonProps={{
           "aria-label" : "Previous Page"
         }} nextIconButtonProps={{
           "aria-label" : "Next Page"
@@ -269,8 +259,29 @@ class EnhancedTable extends React.Component {
   }
 }
 
-EnhancedTable.propTypes = {
+CEnhancedTable.propTypes = {
   classes: PropTypes.object.isRequired
 };
-
+const mapDispatchToProps = dispatch => {
+  return {
+    list: params => dispatch(list(params))
+  };
+};
+const mapStateToProps = state => {
+  let groups = [];
+  Array.prototype.forEach.call(state.AppReducer.data, group => {
+    let organizers = [];
+    if (group.organizers) {
+      Array.prototype.forEach.call(group.organizers, organizer => {
+        organizers.push(organizer.name);
+      });
+    }
+    groups.push({id: group.id, name: group.name, organizer: organizers.join(", ")});
+  });
+  console.log(state.AppReducer.data);
+  const total_objects = state.AppReducer.total_objects || 0;
+  console.log(total_objects);
+  return {data: groups, total_objects: total_objects};
+};
+const EnhancedTable = connect(mapStateToProps, mapDispatchToProps)(CEnhancedTable);
 export default withStyles(styles)(EnhancedTable);

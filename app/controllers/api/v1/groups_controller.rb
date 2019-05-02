@@ -9,7 +9,8 @@ module Api
       # GET /groups
       def index
         @groups = Group.page(page_params[:page]).per(page_params[:per_page])
-        render json: @groups.to_json(only: %I[_id name], include: { organizers: { only: :name } })
+        @group = @groups.to_json(only: %I[_id name], include: { organizers: { only: :name } })
+        render json: { groups: @groups, meta: { total_objects: @groups.total_count } }
       end
 
       # GET /groups/1
