@@ -6,7 +6,6 @@ import App from './app/App';
 import * as serviceWorker from './serviceWorker';
 import configureStore from './common/reducer';
 let store = configureStore ();
-ReactDOM.render (<App />, document.getElementById ('root'));
 ReactDOM.render (
   <Provider store={store}>
     <App />

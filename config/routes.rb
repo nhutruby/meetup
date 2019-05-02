@@ -8,7 +8,9 @@ Rails.application.routes.draw do
             path: '/' do
     scope module: :v1,
           constraints: Versions.new(version: 1, default: true) do
-      resources :groups
+      resources :groups do
+        post 'import', on: :collection
+      end
     end
   end
 end

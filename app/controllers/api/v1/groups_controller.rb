@@ -14,9 +14,11 @@ module Api
 
       # GET /groups/1
       def show
+        # rubocop:disable all
         @group = @group.to_json(only: %I[_id name], include: {
             meets: { only: %I[_id], include: { user: { only: %I[first_name last_name] }, role: { only: :name } } }
         })
+        # rubocop:enable all   
         render json: @group
       end
 
@@ -43,6 +45,11 @@ module Api
       # DELETE /groups/1
       def destroy
         @group.destroy
+      end
+
+      def import
+        puts params[:file]
+        Group.import(params[:file])
       end
 
       private
