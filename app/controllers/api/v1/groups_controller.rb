@@ -8,7 +8,7 @@ module Api
 
       # GET /groups
       def index
-        @groups = Group.page(page_params[:page]).per(page_params[:per_page])
+        @groups = Group.order_by(name: :asc).page(page_params[:page]).per(page_params[:per_page])
         @group = @groups.to_json(only: %I[_id name], include: { organizers: { only: :name } })
         render json: { groups: @groups, meta: { total_objects: @groups.total_count } }
       end
@@ -51,7 +51,7 @@ module Api
       def import
         puts params[:file]
         Group.import(params[:file])
-        @groups = Group.page(page_params[:page]).per(page_params[:per_page])
+        @groups = Group.order_by(name: :asc).page(page_params[:page]).per(page_params[:per_page])
         @group = @groups.to_json(only: %I[_id name], include: { organizers: { only: :name } })
         render json: { groups: @groups, meta: { total_objects: @groups.total_count } }
       end

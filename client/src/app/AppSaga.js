@@ -44,7 +44,22 @@ function* workerList() {
     }
   }
 }
+
+function* workerChangeRowsPerPage() {
+  while (true) {
+    try {
+      const request = yield take("CHANGE_ROWS_PER_PAGE");
+      const params = request.payload;
+      const response = yield call(list, params);
+      const data = response.data;
+      yield put({type: "CHANGE_ROWS_PER_PAGE_SUCCESS", data});
+    } catch (error) {
+      yield put({type: "CHANGE_ROWS_PER_PAGE_FAIL", error});
+    }
+  }
+}
 export default function* root() {
   yield fork(workerList);
   yield fork(workerUpload);
+  yield fork(workerChangeRowsPerPage);
 }

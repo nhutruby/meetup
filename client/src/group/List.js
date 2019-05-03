@@ -17,8 +17,35 @@ import Tooltip from "@material-ui/core/Tooltip";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import {lighten} from "@material-ui/core/styles/colorManipulator";
-import {list} from "../app/AppAction";
+import {list, changeRowsPerPage} from "../app/AppAction";
 import {connect} from "react-redux";
+
+function desc(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function stableSort(array, cmp) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = cmp(a[0], b[0]);
+    if (order !== 0) 
+      return order;
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map(el => el[0]);
+}
+
+function getSorting(order, orderBy) {
+  return order === "desc"
+    ? (a, b) => desc(a, b, orderBy)
+    : (a, b) => -desc(a, b, orderBy);
+}
 
 const rows = [
   {
@@ -154,6 +181,8 @@ const styles = theme => ({
 class CEnhancedTable extends React.Component {
   state = {
     selected: [],
+    order: "asc",
+    orderBy: "name",
     data: [],
     page: 0,
     rowsPerPage: 5
@@ -162,6 +191,22 @@ class CEnhancedTable extends React.Component {
     super(props);
     this.props.list({page: 1, per_page: 5});
   }
+  handleSomething() {
+    console.log("maaaaa");
+    if (this.props.uploading === false) {
+      this.setState({page: 0});
+    }
+  }
+  handleRequestSort = (event, property) => {
+    const orderBy = property;
+    let order = "desc";
+
+    if (this.state.orderBy === property && this.state.order === "desc") {
+      order = "asc";
+    }
+
+    this.setState({order, orderBy});
+  };
   handleSelectAllClick = event => {
     if (event.target.checked) {
       this.setState(state => ({
@@ -194,20 +239,27 @@ class CEnhancedTable extends React.Component {
   };
 
   handleChangePage = (event, page) => {
+    const cacheTotalObjects = page * this.state.rowsPerPage;
+    if (cacheTotalObjects >= this.props.length) {
+      this.props.list({
+        page: page + 1,
+        per_page: this.state.rowsPerPage
+      });
+    }
     this.setState({page});
   };
 
   handleChangeRowsPerPage = event => {
     this.setState({rowsPerPage: event.target.value});
     this.setState({page: 0});
-    this.props.list({page: 1, per_page: event.target.value});
+    this.props.changeRowsPerPage({page: 1, per_page: event.target.value});
   };
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
     const {classes} = this.props;
-    const {selected, rowsPerPage, page} = this.state;
+    const {selected, order, orderBy, rowsPerPage, page} = this.state;
     const {data} = this.props;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, this.props.total_objects - page * rowsPerPage);
 
@@ -218,7 +270,7 @@ class CEnhancedTable extends React.Component {
           <EnhancedTableHead numSelected={selected.length} onSelectAllClick={this.handleSelectAllClick} rowCount={this.props.total_objects}/>
           <TableBody>
             {
-              data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(n => {
+              stableSort(data, getSorting(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(n => {
                 const isSelected = this.isSelected(n.id);
                 return (<TableRow hover={true} onClick={event => this.handleShow(event, n.id)} className={classes.tr} role="checkbox" aria-checked={isSelected} tabIndex={-1} key={n.id} selected={isSelected}>
                   <TableCell padding="checkbox">
@@ -255,7 +307,7 @@ class CEnhancedTable extends React.Component {
           "aria-label" : "Previous Page"
         }} nextIconButtonProps={{
           "aria-label" : "Next Page"
-        }} onChangePage={this.handleChangePage} onChangeRowsPerPage={this.handleChangeRowsPerPage}/>
+        }} onChangePage={this.handleChangePage} onChangeRowsPerPage={this.handleChangeRowsPerPage} onChange={this.handleSomething}/>
     </Paper>);
   }
 }
@@ -265,7 +317,8 @@ CEnhancedTable.propTypes = {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    list: params => dispatch(list(params))
+    list: params => dispatch(list(params)),
+    changeRowsPerPage: params => dispatch(changeRowsPerPage(params))
   };
 };
 const mapStateToProps = state => {
@@ -282,10 +335,12 @@ const mapStateToProps = state => {
     });
   }
 
-  console.log(state.AppReducer.data);
   const total_objects = state.AppReducer.total_objects || 0;
-  console.log(total_objects);
-  return {data: groups, total_objects: total_objects};
+  return {
+    data: groups,
+    total_objects: total_objects,
+    length: state.AppReducer.data && state.AppReducer.data.length
+  };
 };
 const EnhancedTable = connect(mapStateToProps, mapDispatchToProps)(CEnhancedTable);
 export default withStyles(styles)(EnhancedTable);

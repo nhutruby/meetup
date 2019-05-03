@@ -16,3 +16,12 @@ export const listSuccess = () => {
 export const listFail = error => {
   return {type: "LIST_FAIL", error: error};
 };
+export const changeRowsPerPage = params => {
+  return {type: "CHANGE_ROWS_PER_PAGE", payload: params};
+};
+export const changeRowsPerPageSuccess = () => {
+  return {type: "CHANGE_ROWS_PER_PAGE_SUCCESS"};
+};
+export const changeRowsPerPageFail = error => {
+  return {type: "CHANGE_ROWS_PER_PAGE_FAIL", error: error};
+};

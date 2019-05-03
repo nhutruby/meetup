@@ -20,13 +20,16 @@ const styles = theme => ({
   }
 });
 const FUpload = props => {
+  if (props.upload_status) {
+    window.location.reload();
+  }
   const {classes} = props;
   const handleUpload = e => {
     e.preventDefault();
     props.upload(e.target.files[0]);
   };
   return (<div className={classes.root}>
-    {props.uploading && <LinearProgress color="secondary"/>}
+    {props.loading && <LinearProgress color="secondary"/>}
     <input type="file" accept=".csv" id="csv" name="csv" className={classes.input} onChange={handleUpload}/>
     <label htmlFor="csv">
       <Button raised="true" component="span" className={classes.button} variant="contained">
@@ -44,7 +47,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 const mapStateToProps = state => {
-  return {uploading: state.AppReducer.uploading};
+  return {loading: state.AppReducer.loading, upload_status: state.AppReducer.upload_status};
 };
 const Upload = connect(mapStateToProps, mapDispatchToProps)(FUpload);
 

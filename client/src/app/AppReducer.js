@@ -1,26 +1,31 @@
 const UploadReducer = (state, action) => {
   if (state === undefined) 
-    return {data: {}, uploading: false};
+    return {data: {}, loading: false};
   
   switch (action.type) {
     case "UPLOAD":
       return {
         ...state,
-        uploading: true
+        loading: true
       };
     case "UPLOAD_FAIL":
-      return {data: state, uploading: false, error: action.message};
+      return {data: state, loading: false, error: action.message};
     case "UPLOAD_SUCCESS":
-      state = action.data.groups;
-      return {data: state, total_objects: action.data.meta.total_objects};
+      return {data: action.data.groups, total_objects: action.data.meta.total_objects, loading: false, upload_status: true};
     case "LIST":
       return state;
     case "LIST_FAIL":
       return {data: state, error: action.message};
     case "LIST_SUCCESS":
-      state = action.data.groups;
-      console.log(action.data.groups);
-      return {data: state, total_objects: action.data.meta.total_objects};
+      let groups = action.data.groups;
+      groups.push.apply(groups, state.data);
+      return {data: groups, total_objects: action.data.meta.total_objects};
+    case "CHANGE_ROWS_PER_PAGE":
+      return state;
+    case "CHANGE_ROWS_PER_PAGE_FAIL":
+      return {data: state, error: action.message};
+    case "CHANGE_ROWS_PER_PAGE_SUCCESS":
+      return {data: action.data.groups, total_objects: action.data.meta.total_objects};
     default:
       return state;
   }
