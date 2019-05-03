@@ -4,11 +4,11 @@ module Api
   module V1
     # Groups Controller
     class GroupsController < ApplicationController
-      before_action :set_group, only: %I[show update destroy]
+      before_action :set_group, only: %I[show update destroy replace]
 
       # GET /groups
       def index
-        @groups = Group.order_by(name: :asc).page(page_params[:page]).per(page_params[:per_page])
+        @groups = Group.order_by(id: :desc).page(page_params[:page]).per(page_params[:per_page])
         @group = @groups.to_json(only: %I[_id name], include: { organizers: { only: :name } })
         render json: { groups: @groups, meta: { total_objects: @groups.total_count } }
       end
@@ -43,17 +43,19 @@ module Api
         end
       end
 
-      # DELETE /groups/1
-      def destroy
+      def replace
         @group.destroy
+        @id = @group.id
+        page = page_params[:page].to_i + 1
+        @add = Group.order_by(id: :desc).page(page).per(page_params[:per_page]).first
+        @add[:delete_id] = @id
+        @add = @add.to_json(only: %I[_id name delete_id], include: { organizers: { only: :name } })
+        render json: @add
       end
 
       def import
-        puts params[:file]
         Group.import(params[:file])
-        @groups = Group.order_by(name: :asc).page(page_params[:page]).per(page_params[:per_page])
-        @group = @groups.to_json(only: %I[_id name], include: { organizers: { only: :name } })
-        render json: { groups: @groups, meta: { total_objects: @groups.total_count } }
+        head :ok
       end
 
       private

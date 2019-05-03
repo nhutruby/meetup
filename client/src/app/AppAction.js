@@ -25,3 +25,12 @@ export const changeRowsPerPageSuccess = () => {
 export const changeRowsPerPageFail = error => {
   return {type: "CHANGE_ROWS_PER_PAGE_FAIL", error: error};
 };
+export const deleteGroup = params => {
+  return {type: "DELETE", payload: params};
+};
+export const deleteGroupSuccess = () => {
+  return {type: "DELETE_SUCCESS"};
+};
+export const deletGroupFail = error => {
+  return {type: "DELETE_FAIL", error: error};
+};

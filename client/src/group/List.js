@@ -17,7 +17,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import {lighten} from "@material-ui/core/styles/colorManipulator";
-import {list, changeRowsPerPage} from "../app/AppAction";
+import {list, changeRowsPerPage, deleteGroup} from "../app/AppAction";
 import {connect} from "react-redux";
 
 function desc(a, b, orderBy) {
@@ -181,8 +181,8 @@ const styles = theme => ({
 class CEnhancedTable extends React.Component {
   state = {
     selected: [],
-    order: "asc",
-    orderBy: "name",
+    order: "desc",
+    orderBy: "id",
     data: [],
     page: 0,
     rowsPerPage: 5
@@ -190,12 +190,6 @@ class CEnhancedTable extends React.Component {
   constructor(props) {
     super(props);
     this.props.list({page: 1, per_page: 5});
-  }
-  handleSomething() {
-    console.log("maaaaa");
-    if (this.props.uploading === false) {
-      this.setState({page: 0});
-    }
   }
   handleRequestSort = (event, property) => {
     const orderBy = property;
@@ -254,7 +248,14 @@ class CEnhancedTable extends React.Component {
     this.setState({page: 0});
     this.props.changeRowsPerPage({page: 1, per_page: event.target.value});
   };
-
+  handleDeleteClick = (event, id) => {
+    event.stopPropagation();
+    this.props.deleteGroup({
+      id: id,
+      page: this.state.page + 1,
+      per_page: this.state.rowsPerPage
+    });
+  };
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
@@ -287,7 +288,7 @@ class CEnhancedTable extends React.Component {
                       <EditIcon className={classes.icon}/>
                     </Tooltip>
                     <Tooltip title="Delete">
-                      <DeleteIcon className={classes.icon}/>
+                      <DeleteIcon className={classes.icon} onClick={event => this.handleDeleteClick(event, n.id)}/>
                     </Tooltip>
                   </TableCell>
                 </TableRow>);
@@ -307,7 +308,7 @@ class CEnhancedTable extends React.Component {
           "aria-label" : "Previous Page"
         }} nextIconButtonProps={{
           "aria-label" : "Next Page"
-        }} onChangePage={this.handleChangePage} onChangeRowsPerPage={this.handleChangeRowsPerPage} onChange={this.handleSomething}/>
+        }} onChangePage={this.handleChangePage} onChangeRowsPerPage={this.handleChangeRowsPerPage}/>
     </Paper>);
   }
 }
@@ -318,7 +319,8 @@ CEnhancedTable.propTypes = {
 const mapDispatchToProps = dispatch => {
   return {
     list: params => dispatch(list(params)),
-    changeRowsPerPage: params => dispatch(changeRowsPerPage(params))
+    changeRowsPerPage: params => dispatch(changeRowsPerPage(params)),
+    deleteGroup: params => dispatch(deleteGroup(params))
   };
 };
 const mapStateToProps = state => {

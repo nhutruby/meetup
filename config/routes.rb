@@ -10,6 +10,7 @@ Rails.application.routes.draw do
           constraints: Versions.new(version: 1, default: true) do
       resources :groups do
         post 'import', on: :collection
+        post 'replace', on: :collection
       end
     end
   end

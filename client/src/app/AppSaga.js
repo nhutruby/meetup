@@ -58,8 +58,31 @@ function* workerChangeRowsPerPage() {
     }
   }
 }
+
+function deleteGroup(params) {
+  return axios.post("/groups/replace", {
+    id: params.id,
+    page: params.page,
+    per_page: params.per_page
+  });
+}
+
+function* workerDeleteGroup() {
+  while (true) {
+    try {
+      const request = yield take("DELETE");
+      const params = request.payload;
+      const response = yield call(deleteGroup, params);
+      const data = response.data;
+      yield put({type: "DELETE_SUCCESS", data});
+    } catch (error) {
+      yield put({type: "DELETE_FAIL", error});
+    }
+  }
+}
 export default function* root() {
   yield fork(workerList);
   yield fork(workerUpload);
   yield fork(workerChangeRowsPerPage);
+  yield fork(workerDeleteGroup);
 }

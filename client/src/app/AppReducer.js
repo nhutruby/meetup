@@ -11,7 +11,7 @@ const UploadReducer = (state, action) => {
     case "UPLOAD_FAIL":
       return {data: state, loading: false, error: action.message};
     case "UPLOAD_SUCCESS":
-      return {data: action.data.groups, total_objects: action.data.meta.total_objects, loading: false, upload_status: true};
+      return {loading: false, upload_status: true};
     case "LIST":
       return state;
     case "LIST_FAIL":
@@ -26,6 +26,24 @@ const UploadReducer = (state, action) => {
       return {data: state, error: action.message};
     case "CHANGE_ROWS_PER_PAGE_SUCCESS":
       return {data: action.data.groups, total_objects: action.data.meta.total_objects};
+    case "DELETE":
+      return state;
+    case "DELETE_FAIL":
+      return {data: state, error: action.message};
+    case "DELETE_SUCCESS":
+      console.log(action.data.delete_id);
+      const remove = state.data.map(function (i) {
+        return i.id;
+      }).indexOf(action.data.delete_id);
+      if (remove !== -1) {
+        state.data.splice(remove, 1);
+      }
+      state.data.push(action.data);
+      return {
+        ...state,
+        data: state.data,
+        total_objects: state.total_objects - 1
+      };
     default:
       return state;
   }
