@@ -44,13 +44,16 @@ module Api
       end
 
       def replace
-        @group.destroy
-        @id = @group.id
-        page = page_params[:page].to_i + 1
-        @add = Group.order_by(id: :desc).page(page).per(page_params[:per_page]).first
-        @add[:delete_id] = @id
-        @add = @add.to_json(only: %I[_id name delete_id], include: { organizers: { only: :name } })
-        render json: @add
+        page = page_params[:page].to_i 
+        @add = Group.order_by(id: :desc).page(page).per(page_params[:per_page]).first if Group.all.length > page_params[:per_page].to_i
+        if @add
+          @add[:delete_id] = @group.id if @group
+          @add = @add.to_json(only: %I[_id name delete_id], include: { organizers: { only: :name } })
+        end
+        @group.destroy if @group
+        delete_id = @group.to_json(only: :_id)
+        return render json: @add if @add
+        return render json: delete_id
       end
 
       def import

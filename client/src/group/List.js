@@ -250,11 +250,13 @@ class CEnhancedTable extends React.Component {
   };
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    this.props.deleteGroup({
-      id: id,
-      page: this.state.page + 1,
-      per_page: this.state.rowsPerPage
-    });
+    let page = 0;
+    if (Math.floor(this.props.length / this.state.rowsPerPage) >= this.state.page) {
+      page = Math.floor(this.props.length / this.state.rowsPerPage) + 1;
+    } else {
+      page = this.state.page + 1;
+    }
+    this.props.deleteGroup({id: id, page: page, per_page: this.state.rowsPerPage});
   };
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
@@ -338,6 +340,7 @@ const mapStateToProps = state => {
   }
 
   const total_objects = state.AppReducer.total_objects || 0;
+
   return {
     data: groups,
     total_objects: total_objects,

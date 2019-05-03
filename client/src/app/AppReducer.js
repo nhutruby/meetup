@@ -31,14 +31,28 @@ const UploadReducer = (state, action) => {
     case "DELETE_FAIL":
       return {data: state, error: action.message};
     case "DELETE_SUCCESS":
-      console.log(action.data.delete_id);
+      let id = null;
+      if (action.data.delete_id) {
+        id = action.data.delete_id;
+      } else {
+        id = action.data.id;
+      }
       const remove = state.data.map(function (i) {
         return i.id;
-      }).indexOf(action.data.delete_id);
+      }).indexOf(id);
       if (remove !== -1) {
         state.data.splice(remove, 1);
       }
-      state.data.push(action.data);
+      console.log(action.data.delete_id);
+      console.log(action.data.id);
+      if (action.data.delete_id) {
+        const delete_index = state.data.map(function (i) {
+          return i.id;
+        }).indexOf(action.data.id);
+        if (delete_index === -1) {
+          state.data.push(action.data);
+        }
+      }
       return {
         ...state,
         data: state.data,
