@@ -43,8 +43,6 @@ const UploadReducer = (state, action) => {
       if (remove !== -1) {
         state.data.splice(remove, 1);
       }
-      console.log(action.data.delete_id);
-      console.log(action.data.id);
       if (action.data.delete_id) {
         const delete_index = state.data.map(function (i) {
           return i.id;
@@ -53,6 +51,7 @@ const UploadReducer = (state, action) => {
           state.data.push(action.data);
         }
       }
+      console.log(state.data);
       return {
         ...state,
         data: state.data,
