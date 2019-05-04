@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="af8a7e77-bc92-4dfd-9c61-289fc4b9063e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/app/controllers/api/v1/groups_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/api/v1/groups_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/app/AppAction.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/AppAction.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/app/AppReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/AppReducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/app/AppSaga.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/AppSaga.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/group/Edit.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/group/Edit.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.bundle/" />
@@ -78,8 +76,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/controllers/api/v1/groups_controller.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="113">
-              <caret line="42" column="50" selection-start-line="42" selection-start-column="50" selection-end-line="42" selection-end-column="50" />
+            <state relative-caret-position="75">
+              <caret line="40" column="12" selection-start-line="40" selection-start-column="12" selection-end-line="40" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -478,12 +476,12 @@
       <workItem from="1556780344486" duration="1632000" />
       <workItem from="1556785095031" duration="7686000" />
       <workItem from="1556845865731" duration="28604000" />
-      <workItem from="1556931212544" duration="7014000" />
+      <workItem from="1556931212544" duration="8549000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="84312000" />
+    <option name="totallyTimeSpent" value="85847000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="27" width="1299" height="741" extended-state="6" />
@@ -775,8 +773,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/controllers/api/v1/groups_controller.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="113">
-          <caret line="42" column="50" selection-start-line="42" selection-start-column="50" selection-end-line="42" selection-end-column="50" />
+        <state relative-caret-position="75">
+          <caret line="40" column="12" selection-start-line="40" selection-start-column="12" selection-end-line="40" selection-end-column="12" />
         </state>
       </provider>
     </entry>

@@ -39,8 +39,7 @@ module Api
         if @group.update(group_params)
           render json: @group.to_json(only: %I[_id name]), status: :ok
         else
-          puts 'mee'
-          render json: @group.errors.full_messages
+          render json: {error: @group.errors.full_messages}, status: :unprocessable_entity
         end
       end
 

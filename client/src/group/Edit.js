@@ -93,7 +93,7 @@ class CEdit extends React.Component {
             </div>}
           {this.props.error &&
             <div className={classes.error}>
-              <label> {this.props.error}</label>
+              <label>{this.props.error.join (', ')}</label>
             </div>}
           <TextField
             id="name"
@@ -136,7 +136,7 @@ const mapDispatchToProps = dispatch => {
 };
 const mapStateToProps = state => {
   return {
-    error: state.AppReducer.data.error,
+    error: state.AppReducer.error,
   };
 };
 const Edit = connect (mapStateToProps, mapDispatchToProps) (CEdit);
