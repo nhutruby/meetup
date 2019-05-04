@@ -77,8 +77,6 @@ const UploadReducer = (state, action) => {
     case 'EDIT':
       return state;
     case 'EDIT_FAIL':
-      console.log (action.error.response.data.error);
-      console.log ('fail');
       return {...state, error: action.error.response.data.error};
     case 'EDIT_SUCCESS':
       state.data.forEach (function (i) {
@@ -86,7 +84,7 @@ const UploadReducer = (state, action) => {
           i.name = action.data.name;
         }
       });
-      return {...state, error: null};
+      return {...state, error: false};
     case 'EDIT_SHOW':
       return {...state, error: null};
     default:

@@ -69,12 +69,18 @@ class CEdit extends React.Component {
     event.preventDefault ();
     if (this.handleValidate ()) {
       if (this.state.name.trim () !== this.props.name.trim ()) {
-        console.log ('pass');
         this.props.edit ({id: this.props.id, name: this.state.name});
+      } else {
+        this.props.handlerFromFormDialog (false);
       }
     }
   };
 
+  componentDidUpdate (oldProps) {
+    if (this.props.error === false) {
+      this.props.handlerFromFormDialog (false);
+    }
+  }
   render () {
     const {classes} = this.props;
 
