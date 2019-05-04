@@ -17,7 +17,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import {lighten} from '@material-ui/core/styles/colorManipulator';
-import {list, changeRowsPerPage, deleteGroup} from '../app/AppAction';
+import {list, changeRowsPerPage, deleteGroup, editShow} from '../app/AppAction';
 import Show from './Show';
 import Edit from './Edit';
 import Dialog from '@material-ui/core/Dialog';
@@ -291,6 +291,7 @@ class CEnhancedTable extends React.Component {
     this.setState ({dialogShow: 'edit'});
     this.setState ({name: name});
     this.setState ({maxWidth: maxWidth});
+    this.props.editShow ();
   };
   handleShow = (event, id, name, maxWidth) => {
     this.setState ({open: true});
@@ -474,6 +475,7 @@ const mapDispatchToProps = dispatch => {
     list: params => dispatch (list (params)),
     changeRowsPerPage: params => dispatch (changeRowsPerPage (params)),
     deleteGroup: params => dispatch (deleteGroup (params)),
+    editShow: () => dispatch (editShow ()),
   };
 };
 const mapStateToProps = state => {

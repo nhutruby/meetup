@@ -52,3 +52,6 @@ export const editSuccess = () => {
 export const editFail = error => {
   return {type: 'EDIT_FAIL', error: error};
 };
+export const editShow = error => {
+  return {type: 'EDIT_SHOW'};
+};
