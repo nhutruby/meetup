@@ -20,12 +20,7 @@ import {lighten} from '@material-ui/core/styles/colorManipulator';
 import {list, changeRowsPerPage, deleteGroup} from '../app/AppAction';
 import Show from './Show';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 
 import {connect} from 'react-redux';
 
@@ -84,19 +79,27 @@ class FormDialog extends React.Component {
   };
 
   render () {
-    const {dialogShow} = this.props;
+    const {name, groupId, dialogShow, maxWidth} = this.props;
     let form;
     if (dialogShow === 'show') {
-      form = <Show handlerFromFormDialog={this.handleData} />;
+      form = (
+        <Show
+          handlerFromFormDialog={this.handleData}
+          id={groupId}
+          name={name}
+        />
+      );
     }
     return (
       <div>
         <Dialog
           open={this.props.open ? true : false}
           onClose={this.handleClose}
+          fullWidth={true}
+          maxWidth={maxWidth}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+
           <DialogContent>
             {form}
           </DialogContent>
@@ -240,6 +243,8 @@ class CEnhancedTable extends React.Component {
     open: false,
     groupId: null,
     dialogShow: null,
+    name: null,
+    maxWidth: 'sm',
   };
   constructor (props) {
     super (props);
@@ -265,10 +270,12 @@ class CEnhancedTable extends React.Component {
     this.setState ({selected: []});
   };
 
-  handleShow = (event, id) => {
+  handleShow = (event, id, name, maxWidth) => {
     this.setState ({open: true});
     this.setState ({groupId: id});
     this.setState ({dialogShow: 'show'});
+    this.setState ({name: name});
+    this.setState ({maxWidth: maxWidth});
   };
   handleClick = (event, id) => {
     const {selected} = this.state;
@@ -356,7 +363,8 @@ class CEnhancedTable extends React.Component {
                     return (
                       <TableRow
                         hover={true}
-                        onClick={event => this.handleShow (event, n.id)}
+                        onClick={event =>
+                          this.handleShow (event, n.id, n.name, 'sm')}
                         className={classes.tr}
                         role="checkbox"
                         aria-checked={isSelected}
@@ -423,6 +431,8 @@ class CEnhancedTable extends React.Component {
           handlerFromParent={this.handleData}
           groupId={this.state.groupId}
           dialogShow={this.state.dialogShow}
+          name={this.state.name}
+          maxWidth={this.state.maxWidth}
         />
       </div>
     );

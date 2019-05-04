@@ -1,62 +1,82 @@
 const UploadReducer = (state, action) => {
-  if (state === undefined) 
-    return {data: {}, loading: false};
-  
+  if (state === undefined) return {data: {}, loading: false};
+
   switch (action.type) {
-    case "UPLOAD":
+    case 'UPLOAD':
       return {
         ...state,
-        loading: true
+        loading: true,
       };
-    case "UPLOAD_FAIL":
+    case 'UPLOAD_FAIL':
       return {data: state, loading: false, error: action.message};
-    case "UPLOAD_SUCCESS":
+    case 'UPLOAD_SUCCESS':
       return {loading: false, upload_status: true};
-    case "LIST":
+    case 'LIST':
       return state;
-    case "LIST_FAIL":
+    case 'LIST_FAIL':
       return {data: state, error: action.message};
-    case "LIST_SUCCESS":
+    case 'LIST_SUCCESS':
       let groups = action.data.groups;
-      groups.push.apply(groups, state.data);
+      groups.push.apply (groups, state.data);
       return {data: groups, total_objects: action.data.meta.total_objects};
-    case "CHANGE_ROWS_PER_PAGE":
+    case 'CHANGE_ROWS_PER_PAGE':
       return state;
-    case "CHANGE_ROWS_PER_PAGE_FAIL":
+    case 'CHANGE_ROWS_PER_PAGE_FAIL':
       return {data: state, error: action.message};
-    case "CHANGE_ROWS_PER_PAGE_SUCCESS":
-      return {data: action.data.groups, total_objects: action.data.meta.total_objects};
-    case "DELETE":
+    case 'CHANGE_ROWS_PER_PAGE_SUCCESS':
+      return {
+        data: action.data.groups,
+        total_objects: action.data.meta.total_objects,
+      };
+    case 'DELETE':
       return state;
-    case "DELETE_FAIL":
+    case 'DELETE_FAIL':
       return {data: state, error: action.message};
-    case "DELETE_SUCCESS":
+    case 'DELETE_SUCCESS':
       let id = null;
       if (action.data.delete_id) {
         id = action.data.delete_id;
       } else {
         id = action.data.id;
       }
-      const remove = state.data.map(function (i) {
-        return i.id;
-      }).indexOf(id);
+      const remove = state.data
+        .map (function (i) {
+          return i.id;
+        })
+        .indexOf (id);
       if (remove !== -1) {
-        state.data.splice(remove, 1);
+        state.data.splice (remove, 1);
       }
       if (action.data.delete_id) {
-        const delete_index = state.data.map(function (i) {
-          return i.id;
-        }).indexOf(action.data.id);
+        const delete_index = state.data
+          .map (function (i) {
+            return i.id;
+          })
+          .indexOf (action.data.id);
         if (delete_index === -1) {
-          state.data.push(action.data);
+          state.data.push (action.data);
         }
       }
-      console.log(state.data);
+      console.log (state.data);
       return {
         ...state,
         data: state.data,
-        total_objects: state.total_objects - 1
+        total_objects: state.total_objects - 1,
       };
+    case 'SHOW':
+      return state;
+    case 'SHOW_FAIL':
+      return {data: state, error: action.message};
+    case 'SHOW_SUCCESS':
+      console.log (action.data);
+      state.data.forEach (function (i) {
+        if (i.id === action.data.id) {
+          i.meets = action.data.meets;
+          i.name = action.data.name;
+        }
+      });
+      console.log (state.data);
+      return {...state, id: action.data.id};
     default:
       return state;
   }

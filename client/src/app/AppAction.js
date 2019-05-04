@@ -1,36 +1,45 @@
 export const upload = file => {
-  return {type: "UPLOAD", payload: file};
+  return {type: 'UPLOAD', payload: file};
 };
 export const uploadSuccess = () => {
-  return {type: "UPLOAD_SUCCESS"};
+  return {type: 'UPLOAD_SUCCESS'};
 };
 export const uploadFail = error => {
-  return {type: "UPLOAD_FAIL", error: error};
+  return {type: 'UPLOAD_FAIL', error: error};
 };
 export const list = params => {
-  return {type: "LIST", payload: params};
+  return {type: 'LIST', payload: params};
 };
 export const listSuccess = () => {
-  return {type: "LIST_SUCCESS"};
+  return {type: 'LIST_SUCCESS'};
 };
 export const listFail = error => {
-  return {type: "LIST_FAIL", error: error};
+  return {type: 'LIST_FAIL', error: error};
 };
 export const changeRowsPerPage = params => {
-  return {type: "CHANGE_ROWS_PER_PAGE", payload: params};
+  return {type: 'CHANGE_ROWS_PER_PAGE', payload: params};
 };
 export const changeRowsPerPageSuccess = () => {
-  return {type: "CHANGE_ROWS_PER_PAGE_SUCCESS"};
+  return {type: 'CHANGE_ROWS_PER_PAGE_SUCCESS'};
 };
 export const changeRowsPerPageFail = error => {
-  return {type: "CHANGE_ROWS_PER_PAGE_FAIL", error: error};
+  return {type: 'CHANGE_ROWS_PER_PAGE_FAIL', error: error};
 };
 export const deleteGroup = params => {
-  return {type: "DELETE", payload: params};
+  return {type: 'DELETE', payload: params};
 };
 export const deleteGroupSuccess = () => {
-  return {type: "DELETE_SUCCESS"};
+  return {type: 'DELETE_SUCCESS'};
 };
 export const deletGroupFail = error => {
-  return {type: "DELETE_FAIL", error: error};
+  return {type: 'DELETE_FAIL', error: error};
+};
+export const show = id => {
+  return {type: 'SHOW', payload: id};
+};
+export const showSuccess = () => {
+  return {type: 'SHOW_SUCCESS'};
+};
+export const showFail = error => {
+  return {type: 'SHOW_FAIL', error: error};
 };
