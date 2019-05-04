@@ -18,13 +18,15 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import {lighten} from '@material-ui/core/styles/colorManipulator';
 import {list, changeRowsPerPage, deleteGroup} from '../app/AppAction';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import Show from './Show';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+
 import {connect} from 'react-redux';
 
 function desc (a, b, orderBy) {
@@ -77,39 +79,30 @@ class FormDialog extends React.Component {
   handleClose = () => {
     this.props.handlerFromParent (false);
   };
+  handleData = data => {
+    this.props.handlerFromParent (this.props.handlerFromFormDialog);
+  };
 
   render () {
+    const {dialogShow} = this.props;
+    let form;
+    if (dialogShow === 'show') {
+      form = <Show handlerFromFormDialog={this.handleData} />;
+    }
     return (
       <div>
         <Dialog
-          open={this.props.open}
+          open={this.props.open ? true : false}
           onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              To subscribe to this website, please enter your email address here. We will send
-              updates occasionally.
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Email Address"
-              type="email"
-              fullWidth
-            />
+            {form}
           </DialogContent>
-          <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={this.handleClose} color="primary">
-              Subscribe
-            </Button>
-          </DialogActions>
+
         </Dialog>
+
       </div>
     );
   }
@@ -245,6 +238,8 @@ class CEnhancedTable extends React.Component {
     page: 0,
     rowsPerPage: 5,
     open: false,
+    groupId: null,
+    dialogShow: null,
   };
   constructor (props) {
     super (props);
@@ -271,8 +266,9 @@ class CEnhancedTable extends React.Component {
   };
 
   handleShow = (event, id) => {
-    console.log ('aa');
     this.setState ({open: true});
+    this.setState ({groupId: id});
+    this.setState ({dialogShow: 'show'});
   };
   handleClick = (event, id) => {
     const {selected} = this.state;
@@ -425,6 +421,8 @@ class CEnhancedTable extends React.Component {
         <FormDialog
           open={this.state.open}
           handlerFromParent={this.handleData}
+          groupId={this.state.groupId}
+          dialogShow={this.state.dialogShow}
         />
       </div>
     );
