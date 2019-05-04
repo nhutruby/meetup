@@ -57,7 +57,6 @@ const UploadReducer = (state, action) => {
           state.data.push (action.data);
         }
       }
-      console.log (state.data);
       return {
         ...state,
         data: state.data,
@@ -68,14 +67,12 @@ const UploadReducer = (state, action) => {
     case 'SHOW_FAIL':
       return {data: state, error: action.message};
     case 'SHOW_SUCCESS':
-      console.log (action.data);
       state.data.forEach (function (i) {
         if (i.id === action.data.id) {
           i.meets = action.data.meets;
           i.name = action.data.name;
         }
       });
-      console.log (state.data);
       return {...state, id: action.data.id};
     default:
       return state;

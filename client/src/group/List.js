@@ -19,6 +19,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import {lighten} from '@material-ui/core/styles/colorManipulator';
 import {list, changeRowsPerPage, deleteGroup} from '../app/AppAction';
 import Show from './Show';
+import Edit from './Edit';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 
@@ -81,15 +82,28 @@ class FormDialog extends React.Component {
   render () {
     const {name, groupId, dialogShow, maxWidth} = this.props;
     let form;
-    if (dialogShow === 'show') {
-      form = (
-        <Show
-          handlerFromFormDialog={this.handleData}
-          id={groupId}
-          name={name}
-        />
-      );
+    switch (dialogShow) {
+      case 'show':
+        form = (
+          <Show
+            handlerFromFormDialog={this.handleData}
+            id={groupId}
+            name={name}
+          />
+        );
+        break;
+      case 'edit':
+        form = (
+          <Edit
+            handlerFromFormDialog={this.handleData}
+            id={groupId}
+            name={name}
+          />
+        );
+        break;
+      default:
     }
+
     return (
       <div>
         <Dialog
@@ -270,6 +284,14 @@ class CEnhancedTable extends React.Component {
     this.setState ({selected: []});
   };
 
+  handleEdit = (event, id, name, maxWidth) => {
+    event.stopPropagation ();
+    this.setState ({open: true});
+    this.setState ({groupId: id});
+    this.setState ({dialogShow: 'edit'});
+    this.setState ({name: name});
+    this.setState ({maxWidth: maxWidth});
+  };
   handleShow = (event, id, name, maxWidth) => {
     this.setState ({open: true});
     this.setState ({groupId: id});
@@ -277,6 +299,7 @@ class CEnhancedTable extends React.Component {
     this.setState ({name: name});
     this.setState ({maxWidth: maxWidth});
   };
+
   handleClick = (event, id) => {
     const {selected} = this.state;
     const selectedIndex = selected.indexOf (id);
@@ -386,7 +409,11 @@ class CEnhancedTable extends React.Component {
                         </TableCell>
                         <TableCell align="center">
                           <Tooltip title="Edit">
-                            <EditIcon className={classes.icon} />
+                            <EditIcon
+                              className={classes.icon}
+                              onClick={event =>
+                                this.handleEdit (event, n.id, n.name, 'sm')}
+                            />
                           </Tooltip>
                           <Tooltip title="Delete">
                             <DeleteIcon

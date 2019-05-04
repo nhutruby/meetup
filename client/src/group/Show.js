@@ -91,7 +91,6 @@ const mapStateToProps = state => {
       });
     }
   });
-  console.log (meets);
   return {
     meets: meets,
   };
