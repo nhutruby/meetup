@@ -97,10 +97,28 @@ function* workerShow () {
     }
   }
 }
+function edit (params) {
+  return axios.put ('/groups/' + params.id, params);
+}
+
+function* workerEdit () {
+  while (true) {
+    try {
+      const request = yield take ('EDIT');
+      const params = request.payload;
+      const response = yield call (edit, params);
+      const data = response.data;
+      yield put ({type: 'EDIT_SUCCESS', data});
+    } catch (error) {
+      yield put ({type: 'EDIT_FAIL', error});
+    }
+  }
+}
 export default function* root () {
   yield fork (workerList);
   yield fork (workerUpload);
   yield fork (workerChangeRowsPerPage);
   yield fork (workerDeleteGroup);
   yield fork (workerShow);
+  yield fork (workerEdit);
 }

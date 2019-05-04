@@ -37,9 +37,10 @@ module Api
       # PATCH/PUT /groups/1
       def update
         if @group.update(group_params)
-          render json: @group, status: :ok
+          render json: @group.to_json(only: %I[_id name]), status: :ok
         else
-          render json: @group.errors, status: :unprocessable_entity
+          puts 'mee'
+          render json: @group.errors.full_messages
         end
       end
 

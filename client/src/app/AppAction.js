@@ -43,3 +43,12 @@ export const showSuccess = () => {
 export const showFail = error => {
   return {type: 'SHOW_FAIL', error: error};
 };
+export const edit = params => {
+  return {type: 'EDIT', payload: params};
+};
+export const editSuccess = () => {
+  return {type: 'EDIT_SUCCESS'};
+};
+export const editFail = error => {
+  return {type: 'EDIT_FAIL', error: error};
+};

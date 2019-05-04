@@ -74,6 +74,19 @@ const UploadReducer = (state, action) => {
         }
       });
       return {...state, id: action.data.id};
+    case 'EDIT':
+      return state;
+    case 'EDIT_FAIL':
+      console.log (action);
+      return {...state, error: action.message};
+    case 'EDIT_SUCCESS':
+      console.log (action.data);
+      state.data.forEach (function (i) {
+        if (i.id === action.data.id) {
+          i.name = action.data.name;
+        }
+      });
+      return {...state};
     default:
       return state;
   }
