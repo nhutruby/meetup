@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="af8a7e77-bc92-4dfd-9c61-289fc4b9063e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/controllers/api/v1/groups_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/api/v1/groups_controller.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/app/AppReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/app/AppReducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/group/List.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/group/List.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/group/EnhancedTableToolbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/group/EnhancedTableToolbar.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.bundle/" />
     <ignored path="$PROJECT_DIR$/components/" />
@@ -479,12 +478,12 @@
       <workItem from="1556785095031" duration="7686000" />
       <workItem from="1556845865731" duration="28604000" />
       <workItem from="1556931212544" duration="13440000" />
-      <workItem from="1557016887695" duration="14979000" />
+      <workItem from="1557016887695" duration="15578000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="105717000" />
+    <option name="totallyTimeSpent" value="106316000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="27" width="1299" height="741" extended-state="6" />

@@ -42,9 +42,9 @@ class CEnhancedTableToolbar extends React.Component {
       per_page: rowsPerPage,
       length: length,
     });
+    this.props.handlerFromList ([]);
     console.log ('hahafff');
   };
-
   render () {
     const {numSelected, selected, rowsPerPage, length, classes} = this.props;
 
@@ -90,7 +90,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 const mapStateToProps = state => {
-  return {};
+  return {
+    error: state.AppReducer.error,
+  };
 };
 
 const EnhancedTableToolbar = connect (mapStateToProps, mapDispatchToProps) (

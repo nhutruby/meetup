@@ -328,6 +328,12 @@ class CEnhancedTable extends React.Component {
       open: data,
     });
   };
+  handleDeleteAll = data => {
+    this.setState ({
+      selected: [],
+    });
+  };
+
   render () {
     const {classes} = this.props;
     const {selected, order, orderBy, rowsPerPage, page} = this.state;
@@ -361,6 +367,7 @@ class CEnhancedTable extends React.Component {
             selected={selected}
             rowsPerPage={rowsPerPage}
             length={this.props.length}
+            handlerFromList={this.handleDeleteAll}
           />
           <div className={classes.tableWrapper}>
             <Table className={classes.table} aria-labelledby="tableTitle">

@@ -34,7 +34,7 @@ const UploadReducer = (state, action) => {
         total_objects: action.data.meta.total_objects,
       };
     case 'REMOVE':
-      return {...state};
+      return {...state, error: null};
     case 'REMOVE_FAIL':
       return {...state};
     case 'REMOVE_SUCCESS':
@@ -67,6 +67,7 @@ const UploadReducer = (state, action) => {
         ...state,
         data: state.data,
         total_objects: action.data.meta.total_objects,
+        error: false,
       };
     case 'SHOW':
       return state;
