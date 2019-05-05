@@ -43,7 +43,6 @@ class CEnhancedTableToolbar extends React.Component {
       length: length,
     });
     this.props.handlerFromList ([]);
-    console.log ('hahafff');
   };
   render () {
     const {numSelected, selected, rowsPerPage, length, classes} = this.props;

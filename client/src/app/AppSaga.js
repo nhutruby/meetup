@@ -109,7 +109,6 @@ function* workerEdit () {
   }
 }
 function newGroup (params) {
-  console.log (params);
   return axios.post ('/groups', params);
 }
 
@@ -122,7 +121,6 @@ function* workerNewGroup () {
       const data = response.data;
       yield put ({type: 'NEW_SUCCESS', data});
     } catch (error) {
-      console.log (error);
       yield put ({type: 'NEW_FAIL', error});
     }
   }

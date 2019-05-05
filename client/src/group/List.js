@@ -274,7 +274,6 @@ class CEnhancedTable extends React.Component {
   };
 
   handleClick = (event, id) => {
-    console.log ('mama');
     event.stopPropagation ();
     const {selected} = this.state;
     const selectedIndex = selected.indexOf (id);
@@ -333,7 +332,6 @@ class CEnhancedTable extends React.Component {
       selected: [],
     });
   };
-
   render () {
     const {classes} = this.props;
     const {selected, order, orderBy, rowsPerPage, page} = this.state;
@@ -496,8 +494,10 @@ const mapStateToProps = state => {
     });
   }
 
-  const total_objects = state.AppReducer.total_objects || 0;
-
+  let total_objects = state.AppReducer.total_objects || 0;
+  console.log ('aa');
+  console.log (total_objects);
+  console.log (state.AppReducer);
   return {
     data: groups,
     total_objects: total_objects,

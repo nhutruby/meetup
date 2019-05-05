@@ -50,16 +50,16 @@ module Api
         puts params[:ids]
         Group.where(id: { '$in': params[:ids]}).delete
         puts Group.count
-        page = (params[:length] - params[:ids].length)/page_params[:per_page]
+        page = (params[:length] - params[:ids].length)/page_params[:per_page] + 1
         skip = page_params[:per_page] - params[:ids].length
         puts page_params[:per_page]
         puts page
         puts skip
-
         @groups = Group.order_by(id: :desc).page(page).per(page_params[:per_page])
-        @groups.to_json(only: %I[_id name], include: { organizers: { only: :name } })
+        puts @groups.to_json(only: %I[_id name], include: { organizers: { only: :name } })
         puts 'totla'
-        puts  @groups.total_count
+        puts @groups[skip..(page_params[:per_page] - 1)].to_json
+        puts @groups.total_count
         render json: { groups: @groups[skip..(page_params[:per_page] - 1)], delete_ids: params[:ids], meta: { total_objects: @groups.total_count } }
       end
 

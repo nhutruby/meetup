@@ -41,7 +41,7 @@ const UploadReducer = (state, action) => {
       console.log ('total');
       console.log (action.data.meta.total_objects);
       let remove;
-
+      let add;
       action.data.delete_ids.forEach (function (id) {
         remove = state.data
           .map (function (i) {
@@ -49,24 +49,25 @@ const UploadReducer = (state, action) => {
           })
           .indexOf (id);
         if (remove !== -1) {
+          console.log ('remove');
           state.data.splice (remove, 1);
+          state.total_objects = action.data.meta.total_objects;
         }
       });
       action.data.groups.forEach (group => {
-        const add = state.data
+        add = state.data
           .map (function (i) {
             return i.id;
           })
           .indexOf (group.id);
         if (add === -1) {
+          console.log ('addd');
           state.data.push (group);
         }
       });
-
+      console.log (state);
       return {
         ...state,
-        data: state.data,
-        total_objects: action.data.meta.total_objects,
         error: false,
       };
     case 'SHOW':
@@ -97,7 +98,6 @@ const UploadReducer = (state, action) => {
     case 'NEW':
       return {...state, error: null};
     case 'NEW_FAIL':
-      console.log (action);
       return {...state, error: action.error.response.data.error};
     case 'NEW_SUCCESS':
       return {
