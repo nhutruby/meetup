@@ -33,19 +33,19 @@ class CShow extends React.Component {
     return (
       <div>
         <DialogTitle id="form-dialog-title">{name}</DialogTitle>
-        <Paper className={classes.root}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>First Name</TableCell>
-                <TableCell>Last Name</TableCell>
-                <TableCell align="right">Role</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.props &&
-                this.props.meets &&
-                this.props.meets.map (row => (
+        {this.props &&
+          this.props.meets.length > 0 &&
+          <Paper className={classes.root}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>First Name</TableCell>
+                  <TableCell>Last Name</TableCell>
+                  <TableCell align="right">Role</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {this.props.meets.map (row => (
                   <TableRow key={row.id}>
                     <TableCell component="th" scope="row">
                       {row.first_name}
@@ -56,9 +56,9 @@ class CShow extends React.Component {
                     <TableCell align="right">{row.role}</TableCell>
                   </TableRow>
                 ))}
-            </TableBody>
-          </Table>
-        </Paper>
+              </TableBody>
+            </Table>
+          </Paper>}
         <DialogActions>
           <Button onClick={this.handleClose} color="primary">
             Cancel

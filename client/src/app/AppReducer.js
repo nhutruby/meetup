@@ -49,7 +49,6 @@ const UploadReducer = (state, action) => {
           })
           .indexOf (id);
         if (remove !== -1) {
-          console.log ('remove');
           state.data.splice (remove, 1);
           state.total_objects = action.data.meta.total_objects;
         }
@@ -61,11 +60,9 @@ const UploadReducer = (state, action) => {
           })
           .indexOf (group.id);
         if (add === -1) {
-          console.log ('addd');
           state.data.push (group);
         }
       });
-      console.log (state);
       return {
         ...state,
         error: false,

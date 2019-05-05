@@ -493,11 +493,7 @@ const mapStateToProps = state => {
       });
     });
   }
-
   let total_objects = state.AppReducer.total_objects || 0;
-  console.log ('aa');
-  console.log (total_objects);
-  console.log (state.AppReducer);
   return {
     data: groups,
     total_objects: total_objects,

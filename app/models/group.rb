@@ -10,7 +10,7 @@ class Group
   validates :name, presence: true, uniqueness: true
 
   # association
-  has_many :meets
+  has_many :meets, dependent: :delete_all
   embeds_many :organizers
 
   # rubocop:disable all

@@ -48,7 +48,7 @@ module Api
 
       def remove
         puts params[:ids]
-        Group.where(id: { '$in': params[:ids]}).delete
+        Group.where(id: { '$in': params[:ids]}).destroy
         puts Group.count
         page = (params[:length] - params[:ids].length)/page_params[:per_page] + 1
         skip = page_params[:per_page] - params[:ids].length
