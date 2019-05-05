@@ -64,7 +64,7 @@ module Api
       end
 
       def import
-        Group.import(params[:file])
+        Group.import(params[:file]) if params[:file] != 'undefined'
         @groups = Group.order_by(id: :desc).page(0).per(page_params[:per_page])
         @groups.to_json(only: %I[_id name], include: { organizers: { only: :name } })
         render json: { groups: @groups, meta: { total_objects: @groups.total_count } }
