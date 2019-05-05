@@ -38,7 +38,8 @@ const UploadReducer = (state, action) => {
     case 'REMOVE_FAIL':
       return {...state};
     case 'REMOVE_SUCCESS':
-      console.log (action);
+      console.log ('total');
+      console.log (action.data.meta.total_objects);
       let remove;
 
       action.data.delete_ids.forEach (function (id) {
