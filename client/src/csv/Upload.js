@@ -20,13 +20,13 @@ const styles = theme => ({
   },
 });
 const FUpload = props => {
-  if (props.upload_status) {
-    window.location.reload ();
-  }
-  const {classes} = props;
+  const {classes, rowsPerPage} = props;
   const handleUpload = e => {
     e.preventDefault ();
-    props.upload (e.target.files[0]);
+    const formData = new FormData ();
+    formData.append ('file', e.target.files[0]);
+    formData.append ('per_page', rowsPerPage);
+    props.upload (formData);
   };
   return (
     <div className={classes.root}>
@@ -63,7 +63,6 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     loading: state.AppReducer.loading,
-    upload_status: state.AppReducer.upload_status,
   };
 };
 const Upload = connect (mapStateToProps, mapDispatchToProps) (FUpload);

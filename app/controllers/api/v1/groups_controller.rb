@@ -4,12 +4,12 @@ module Api
   module V1
     # Groups Controller
     class GroupsController < ApplicationController
-      before_action :set_group, only: %I[show update destroy replace]
+      before_action :set_group, only: %I[show update destroy]
 
       # GET /groups
       def index
         @groups = Group.order_by(id: :desc).page(page_params[:page]).per(page_params[:per_page])
-        @group = @groups.to_json(only: %I[_id name], include: { organizers: { only: :name } })
+        @groups.to_json(only: %I[_id name], include: { organizers: { only: :name } })
         render json: { groups: @groups, meta: { total_objects: @groups.total_count } }
       end
 
@@ -28,9 +28,12 @@ module Api
         @group = Group.new(group_params)
 
         if @group.save
-          render json: @group, status: :created, location: [:api, @group]
+          @groups = Group.order_by(id: :desc).page(0).per(page_params[:per_page])
+          @groups.to_json(only: %I[_id name], include: { organizers: { only: :name } })
+          render json: { groups: @groups, meta: { total_objects: @groups.total_count } }, status: :created, location: [:api, @group]
         else
-          render json: @group.errors, status: :unprocessable_entity
+          puts 'bba'
+          render json: {error: @group.errors.full_messages}, status: :unprocessable_entity
         end
       end
 
@@ -43,27 +46,25 @@ module Api
         end
       end
 
-      def replace
-        page = page_params[:page].to_i
-        if Group.all.length > page_params[:per_page].to_i
-          @add = Group.order_by(id: :desc).page(page).per(page_params[:per_page]).first
-        end
-        if @add
-          @add[:delete_id] = @group.id if @group
-          @add = @add.to_json(only: %I[_id name delete_id],
-                              include: { organizers: { only: :name } })
-        end
-        @group&.destroy
-        delete_id = @group.to_json(only: :_id) if @group
-        return render json: @add if @add
-        return render json: delete_id if @group
-
-        render json: { id: params[:id] }
+      def remove
+        puts params[:ids]
+        Group.where(id: { '$in': params[:ids]}).delete
+        puts Group.count
+        page = (params[:length] - params[:ids].length)/page_params[:per_page]
+        skip = page_params[:per_page] - params[:ids].length
+        puts page_params[:per_page]
+        puts page
+        puts skip
+        @groups = Group.order_by(id: :desc).page(page).per(page_params[:per_page])
+        @groups.to_json(only: %I[_id name], include: { organizers: { only: :name } })
+        render json: { groups: @groups[skip..(page_params[:per_page] - 1)], delete_ids: params[:ids], meta: { total_objects: @groups.total_count } }
       end
 
       def import
         Group.import(params[:file])
-        head :ok
+        @groups = Group.order_by(id: :desc).page(0).per(page_params[:per_page])
+        @groups.to_json(only: %I[_id name], include: { organizers: { only: :name } })
+        render json: { groups: @groups, meta: { total_objects: @groups.total_count } }
       end
 
       private
@@ -77,7 +78,6 @@ module Api
       def group_params
         params.require(:group).permit(:name)
       end
-
       def page_params
         params[:page] = params[:page] || 1
         params[:per_page] = params[:per_page] || 5

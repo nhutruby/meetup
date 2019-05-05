@@ -17,14 +17,22 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import {lighten} from '@material-ui/core/styles/colorManipulator';
-import {list, changeRowsPerPage, deleteGroup, editShow} from '../app/AppAction';
+import {
+  list,
+  changeRowsPerPage,
+  remove,
+  editShow,
+  newShow,
+} from '../app/AppAction';
 import Show from './Show';
 import Edit from './Edit';
+import New from './New';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
-
+import Button from '@material-ui/core/Button';
+import Upload from '../csv/Upload';
 import {connect} from 'react-redux';
-
+import Grid from '@material-ui/core/Grid';
 function desc (a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -80,7 +88,7 @@ class FormDialog extends React.Component {
   };
 
   render () {
-    const {name, groupId, dialogShow, maxWidth} = this.props;
+    const {name, groupId, dialogShow, maxWidth, rowsPerPage} = this.props;
     let form;
     switch (dialogShow) {
       case 'show':
@@ -98,6 +106,14 @@ class FormDialog extends React.Component {
             handlerFromFormDialog={this.handleData}
             id={groupId}
             name={name}
+          />
+        );
+        break;
+      case 'new':
+        form = (
+          <New
+            handlerFromFormDialog={this.handleData}
+            rowsPerPage={rowsPerPage}
           />
         );
         break;
@@ -244,6 +260,13 @@ const styles = theme => ({
   icon: {
     margin: theme.spacing.unit * 2,
   },
+  paper: {
+    maxWidth: 1000,
+    margin: `${theme.spacing.unit}px auto`,
+  },
+  button: {
+    margin: theme.spacing.unit,
+  },
 });
 
 class CEnhancedTable extends React.Component {
@@ -293,6 +316,13 @@ class CEnhancedTable extends React.Component {
     this.setState ({maxWidth: maxWidth});
     this.props.editShow ();
   };
+  handleNew = (event, maxWidth) => {
+    event.stopPropagation ();
+    this.setState ({open: true});
+    this.setState ({dialogShow: 'new'});
+    this.setState ({maxWidth: maxWidth});
+    this.props.newShow ();
+  };
   handleShow = (event, id, name, maxWidth) => {
     this.setState ({open: true});
     this.setState ({groupId: id});
@@ -340,18 +370,10 @@ class CEnhancedTable extends React.Component {
   };
   handleDeleteClick = (event, id) => {
     event.stopPropagation ();
-    let page = 0;
-    if (
-      Math.floor (this.props.length / this.state.rowsPerPage) >= this.state.page
-    ) {
-      page = Math.floor (this.props.length / this.state.rowsPerPage) + 1;
-    } else {
-      page = this.state.page + 1;
-    }
-    this.props.deleteGroup ({
-      id: id,
-      page: page,
+    this.props.remove ({
+      ids: [id],
       per_page: this.state.rowsPerPage,
+      length: this.props.length,
     });
   };
   isSelected = id => this.state.selected.indexOf (id) !== -1;
@@ -370,6 +392,23 @@ class CEnhancedTable extends React.Component {
 
     return (
       <div>
+        <Paper className={classes.paper} elevation={0} />
+        <Paper className={classes.paper} elevation={0}>
+          <Grid container={true} wrap="nowrap" spacing={24}>
+            <Upload rowsPerPage={this.state.rowsPerPage} />
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={event => this.handleNew (event, 'sm')}
+            >
+              New
+            </Button>
+
+          </Grid>
+
+        </Paper>
+
         <Paper className={classes.root}>
           <EnhancedTableToolbar numSelected={selected.length} />
           <div className={classes.tableWrapper}>
@@ -460,6 +499,7 @@ class CEnhancedTable extends React.Component {
           groupId={this.state.groupId}
           dialogShow={this.state.dialogShow}
           name={this.state.name}
+          rowsPerPage={this.state.rowsPerPage}
           maxWidth={this.state.maxWidth}
         />
       </div>
@@ -474,8 +514,9 @@ const mapDispatchToProps = dispatch => {
   return {
     list: params => dispatch (list (params)),
     changeRowsPerPage: params => dispatch (changeRowsPerPage (params)),
-    deleteGroup: params => dispatch (deleteGroup (params)),
+    remove: params => dispatch (remove (params)),
     editShow: () => dispatch (editShow ()),
+    newShow: () => dispatch (newShow ()),
   };
 };
 const mapStateToProps = state => {

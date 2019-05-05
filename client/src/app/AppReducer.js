@@ -8,9 +8,14 @@ const UploadReducer = (state, action) => {
         loading: true,
       };
     case 'UPLOAD_FAIL':
-      return {data: state, loading: false, error: action.message};
+      return {...state, loading: false, error: action.message};
     case 'UPLOAD_SUCCESS':
-      return {loading: false, upload_status: true};
+      return {
+        data: action.data.groups,
+        total_objects: action.data.meta.total_objects,
+        error: false,
+        loading: false,
+      };
     case 'LIST':
       return state;
     case 'LIST_FAIL':
@@ -28,39 +33,39 @@ const UploadReducer = (state, action) => {
         data: action.data.groups,
         total_objects: action.data.meta.total_objects,
       };
-    case 'DELETE':
-      return state;
-    case 'DELETE_FAIL':
-      return {data: state, error: action.message};
-    case 'DELETE_SUCCESS':
-      let id = null;
-      if (action.data.delete_id) {
-        id = action.data.delete_id;
-      } else {
-        id = action.data.id;
-      }
-      const remove = state.data
-        .map (function (i) {
-          return i.id;
-        })
-        .indexOf (id);
-      if (remove !== -1) {
-        state.data.splice (remove, 1);
-      }
-      if (action.data.delete_id) {
-        const delete_index = state.data
+    case 'REMOVE':
+      return {...state};
+    case 'REMOVE_FAIL':
+      return {...state};
+    case 'REMOVE_SUCCESS':
+      console.log (action);
+      let remove;
+
+      action.data.delete_ids.forEach (function (id) {
+        remove = state.data
           .map (function (i) {
             return i.id;
           })
-          .indexOf (action.data.id);
-        if (delete_index === -1) {
-          state.data.push (action.data);
+          .indexOf (id);
+        if (remove !== -1) {
+          state.data.splice (remove, 1);
         }
-      }
+      });
+      action.data.groups.forEach (group => {
+        const add = state.data
+          .map (function (i) {
+            return i.id;
+          })
+          .indexOf (group.id);
+        if (add === -1) {
+          state.data.push (group);
+        }
+      });
+
       return {
         ...state,
         data: state.data,
-        total_objects: state.total_objects - 1,
+        total_objects: action.data.meta.total_objects,
       };
     case 'SHOW':
       return state;
@@ -86,6 +91,19 @@ const UploadReducer = (state, action) => {
       });
       return {...state, error: false};
     case 'EDIT_SHOW':
+      return {...state, error: null};
+    case 'NEW':
+      return {...state, error: null};
+    case 'NEW_FAIL':
+      console.log (action);
+      return {...state, error: action.error.response.data.error};
+    case 'NEW_SUCCESS':
+      return {
+        data: action.data.groups,
+        total_objects: action.data.meta.total_objects,
+        error: false,
+      };
+    case 'NEW_SHOW':
       return {...state, error: null};
     default:
       return state;

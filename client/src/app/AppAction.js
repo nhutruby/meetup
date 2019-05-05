@@ -1,5 +1,5 @@
-export const upload = file => {
-  return {type: 'UPLOAD', payload: file};
+export const upload = params => {
+  return {type: 'UPLOAD', payload: params};
 };
 export const uploadSuccess = () => {
   return {type: 'UPLOAD_SUCCESS'};
@@ -25,14 +25,14 @@ export const changeRowsPerPageSuccess = () => {
 export const changeRowsPerPageFail = error => {
   return {type: 'CHANGE_ROWS_PER_PAGE_FAIL', error: error};
 };
-export const deleteGroup = params => {
-  return {type: 'DELETE', payload: params};
+export const remove = params => {
+  return {type: 'REMOVE', payload: params};
 };
-export const deleteGroupSuccess = () => {
-  return {type: 'DELETE_SUCCESS'};
+export const removeSuccess = () => {
+  return {type: 'REMOVE_SUCCESS'};
 };
-export const deletGroupFail = error => {
-  return {type: 'DELETE_FAIL', error: error};
+export const removeFail = error => {
+  return {type: 'REMOVE_FAIL', error: error};
 };
 export const show = id => {
   return {type: 'SHOW', payload: id};
@@ -54,4 +54,16 @@ export const editFail = error => {
 };
 export const editShow = error => {
   return {type: 'EDIT_SHOW'};
+};
+export const newGroup = params => {
+  return {type: 'NEW', payload: params};
+};
+export const newGroupSuccess = () => {
+  return {type: 'NEW_SUCCESS'};
+};
+export const newGroupFail = error => {
+  return {type: 'NEW_FAIL', error: error};
+};
+export const newShow = error => {
+  return {type: 'NEW_SHOW'};
 };

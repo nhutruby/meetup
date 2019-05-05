@@ -1,16 +1,14 @@
 import {call, put, take, fork} from 'redux-saga/effects';
 import axios, {post} from 'axios';
 
-function upload (file) {
+function upload (params) {
   const url = '/groups/import';
-  const formData = new FormData ();
-  formData.append ('file', file);
   const config = {
     headers: {
       'content-type': 'multipart/form-data',
     },
   };
-  return post (url, formData, config);
+  return post (url, params, config);
 }
 
 function* workerUpload () {
@@ -59,24 +57,20 @@ function* workerChangeRowsPerPage () {
   }
 }
 
-function deleteGroup (params) {
-  return axios.post ('/groups/replace', {
-    id: params.id,
-    page: params.page,
-    per_page: params.per_page,
-  });
+function remove (params) {
+  return axios.post ('/groups/remove', params);
 }
 
-function* workerDeleteGroup () {
+function* workerRemove () {
   while (true) {
     try {
-      const request = yield take ('DELETE');
+      const request = yield take ('REMOVE');
       const params = request.payload;
-      const response = yield call (deleteGroup, params);
+      const response = yield call (remove, params);
       const data = response.data;
-      yield put ({type: 'DELETE_SUCCESS', data});
+      yield put ({type: 'REMOVE_SUCCESS', data});
     } catch (error) {
-      yield put ({type: 'DELETE_FAIL', error});
+      yield put ({type: 'REMOVE_FAIL', error});
     }
   }
 }
@@ -114,11 +108,31 @@ function* workerEdit () {
     }
   }
 }
+function newGroup (params) {
+  console.log (params);
+  return axios.post ('/groups', params);
+}
+
+function* workerNewGroup () {
+  while (true) {
+    try {
+      const request = yield take ('NEW');
+      const params = request.payload;
+      const response = yield call (newGroup, params);
+      const data = response.data;
+      yield put ({type: 'NEW_SUCCESS', data});
+    } catch (error) {
+      console.log (error);
+      yield put ({type: 'NEW_FAIL', error});
+    }
+  }
+}
 export default function* root () {
   yield fork (workerList);
   yield fork (workerUpload);
   yield fork (workerChangeRowsPerPage);
-  yield fork (workerDeleteGroup);
+  yield fork (workerRemove);
   yield fork (workerShow);
   yield fork (workerEdit);
+  yield fork (workerNewGroup);
 }
