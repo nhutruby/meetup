@@ -119,7 +119,7 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
     end
   end
 
-  describe "REMOVE #remove" do
+  describe "POST #remove" do
     it "remove the requested group" do
       group = create(:group)
       expect {
@@ -128,4 +128,10 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
     end
   end
 
+  describe "POST #import" do
+    it "returns a success response" do
+      post :import, params: {file: 'undefined'}
+      expect(response).to be_successful
+    end
+  end
 end

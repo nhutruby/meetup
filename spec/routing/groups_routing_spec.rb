@@ -28,5 +28,11 @@ RSpec.describe Api::V1::GroupsController, type: :routing do
     it "routes to #destroy" do
       expect(:delete => "/groups/1").to route_to("api/v1/groups#destroy", :id => "1", format: :json)
     end
+    it "routes to #import" do
+      expect(:post => "/groups/import").to route_to("api/v1/groups#import", format: :json)
+    end
+    it "routes to #remove" do
+      expect(:post => "/groups/remove").to route_to("api/v1/groups#remove", format: :json)
+    end
   end
 end
