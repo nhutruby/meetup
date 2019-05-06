@@ -119,11 +119,11 @@ RSpec.describe Api::V1::GroupsController, type: :controller do
     end
   end
 
-  describe "DELETE #destroy" do
-    it "destroys the requested group" do
+  describe "REMOVE #remove" do
+    it "remove the requested group" do
       group = create(:group)
       expect {
-        delete :destroy, params: {id: group.to_param}, session: valid_session
+        post :remove, params: {ids: [group.id], length: 1, per_page: 5}
       }.to change(Group, :count).by(-1)
     end
   end

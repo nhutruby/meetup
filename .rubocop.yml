@@ -1,6 +1,6 @@
 require: rubocop-performance
 Metrics/LineLength:
-  Max: 100
+  Max: 110
 AllCops:
   Exclude:
     - 'client/**/*'
