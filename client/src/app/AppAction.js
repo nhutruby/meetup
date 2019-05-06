@@ -43,6 +43,9 @@ export const showSuccess = () => {
 export const showFail = error => {
   return {type: 'SHOW_FAIL', error: error};
 };
+export const showCache = id => {
+  return {type: 'SHOW_CACHE', payload: id};
+};
 export const edit = params => {
   return {type: 'EDIT', payload: params};
 };

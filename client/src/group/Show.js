@@ -23,7 +23,9 @@ const styles = theme => ({
 class CShow extends React.Component {
   constructor (props) {
     super (props);
-    this.props.show (this.props.id);
+    if (this.props.meets.length === 0) {
+      this.props.show (this.props.id);
+    }
   }
   handleClose = () => {
     this.props.handlerFromFormDialog (false);

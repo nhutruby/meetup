@@ -19,6 +19,7 @@ import {
   remove,
   editShow,
   newShow,
+  showCache,
 } from '../app/AppAction';
 import Show from './Show';
 import Edit from './Edit';
@@ -271,6 +272,7 @@ class CEnhancedTable extends React.Component {
     this.setState ({dialogShow: 'show'});
     this.setState ({name: name});
     this.setState ({maxWidth: maxWidth});
+    this.props.showCache (id);
   };
 
   handleClick = (event, id) => {
@@ -474,6 +476,7 @@ const mapDispatchToProps = dispatch => {
     remove: params => dispatch (remove (params)),
     editShow: () => dispatch (editShow ()),
     newShow: () => dispatch (newShow ()),
+    showCache: id => dispatch (showCache (id)),
   };
 };
 const mapStateToProps = state => {
