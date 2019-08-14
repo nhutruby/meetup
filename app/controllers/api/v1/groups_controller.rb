@@ -68,7 +68,7 @@ module Api
       end
 
       def delete_all
-        Group.where(id: { '$in': params[:ids] }).destroy
+        Group.where(id: { '$in': params[:ids], }).destroy
       end
 
       # Only allow a trusted parameter "white list" through.
